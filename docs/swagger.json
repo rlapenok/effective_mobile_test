@@ -1,0 +1,407 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Effective mobile",
+        "contact": {}
+    },
+    "basePath": "/",
+    "paths": {
+        "/add_song": {
+            "post": {
+                "description": "Adds a new song to the library",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Song Library"
+                ],
+                "summary": "Add a new song",
+                "parameters": [
+                    {
+                        "description": "Request body containing song details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/helpers.AddSongRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Response with song ID",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.AddSongResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal error",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/change_song/{id}": {
+            "patch": {
+                "description": "Changing song data by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Song Library"
+                ],
+                "summary": "Change song data",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Song ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "The new group name",
+                        "name": "changes[new_group_name]",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "The new song name",
+                        "name": "changes[new_song_name]",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "The new song link",
+                        "name": "changes[new_link]",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "The new release date",
+                        "name": "changes[new_release_date]",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal error",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/delete_song/{id}": {
+            "delete": {
+                "description": "Deletes a song by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Songs"
+                ],
+                "summary": "Delete a song",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Song ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal error",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/get_info": {
+            "get": {
+                "description": "Get songs info from library",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Song Library"
+                ],
+                "summary": "Get songs info",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "group filter",
+                        "name": "filters[group]",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "song filter",
+                        "name": "filters[song]",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "release start date filter (support gt,gte)",
+                        "name": "filters[release_date_start]",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "release end date filter (support lt,lte)",
+                        "name": "filters[release_date_end]",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "release date filter",
+                        "name": "filters[release_date]",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "page num",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "limit num",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Response with filtered songs",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GetFilteredSongs"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal error",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/lyrics/{id}": {
+            "get": {
+                "description": "Get lyrics with pagination",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Song Library"
+                ],
+                "summary": "Get lyrics",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Song ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "page num",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "limit num",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Response with filtered songs",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.GetLyricsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal error",
+                        "schema": {
+                            "$ref": "#/definitions/helpers.ErrResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "helpers.AddSongRequest": {
+            "type": "object",
+            "required": [
+                "group",
+                "song"
+            ],
+            "properties": {
+                "group": {
+                    "type": "string"
+                },
+                "song": {
+                    "type": "string"
+                }
+            }
+        },
+        "helpers.AddSongResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "fe8b200c-2fe6-4ced-82cd-875751f336fb"
+                }
+            }
+        },
+        "helpers.ErrResponse": {
+            "type": "object",
+            "properties": {
+                "desc": {
+                    "type": "string",
+                    "example": "error description"
+                }
+            }
+        },
+        "helpers.GetFilteredSongs": {
+            "type": "object",
+            "properties": {
+                "songs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.GetInfoSong"
+                    }
+                }
+            }
+        },
+        "helpers.GetLyricsResponse": {
+            "type": "object",
+            "properties": {
+                "lyrics": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Verse"
+                    }
+                }
+            }
+        },
+        "models.GetInfoSong": {
+            "type": "object",
+            "properties": {
+                "group": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "link": {
+                    "type": "string"
+                },
+                "release_date": {
+                    "type": "string"
+                },
+                "song": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Verse": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string"
+                },
+                "verse_number": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,36 @@
+version: '3.8'
+services: 
+  postgres:
+    image: postgres:latest
+    container_name: postgres1
+    mem_limit: 1024m
+    healthcheck:
+      test: bash -c '((echo >/dev/tcp/localhost/5432) &>/dev/null)'
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    environment:
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_USER=test
+      - POSTGRES_DB=test
+    networks:
+      - song_library    
+  service: 
+    container_name: service 
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: service
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - 8080:${PORT}
+    networks:
+      - song_library       
+
+
+networks:
+  song_library:
+    driver: bridge
+    name: song_library        

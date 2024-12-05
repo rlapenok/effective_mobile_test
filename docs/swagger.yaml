@@ -1,0 +1,268 @@
+basePath: /
+definitions:
+  helpers.AddSongRequest:
+    properties:
+      group:
+        type: string
+      song:
+        type: string
+    required:
+    - group
+    - song
+    type: object
+  helpers.AddSongResponse:
+    properties:
+      id:
+        example: fe8b200c-2fe6-4ced-82cd-875751f336fb
+        type: string
+    type: object
+  helpers.ErrResponse:
+    properties:
+      desc:
+        example: error description
+        type: string
+    type: object
+  helpers.GetFilteredSongs:
+    properties:
+      songs:
+        items:
+          $ref: '#/definitions/models.GetInfoSong'
+        type: array
+    type: object
+  helpers.GetLyricsResponse:
+    properties:
+      lyrics:
+        items:
+          $ref: '#/definitions/models.Verse'
+        type: array
+    type: object
+  models.GetInfoSong:
+    properties:
+      group:
+        type: string
+      id:
+        type: string
+      link:
+        type: string
+      release_date:
+        type: string
+      song:
+        type: string
+    type: object
+  models.Verse:
+    properties:
+      text:
+        type: string
+      verse_number:
+        type: integer
+    type: object
+info:
+  contact: {}
+  title: Effective mobile
+paths:
+  /add_song:
+    post:
+      consumes:
+      - application/json
+      description: Adds a new song to the library
+      parameters:
+      - description: Request body containing song details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/helpers.AddSongRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Response with song ID
+          schema:
+            $ref: '#/definitions/helpers.AddSongResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/helpers.ErrResponse'
+        "404":
+          description: Not found
+          schema:
+            $ref: '#/definitions/helpers.ErrResponse'
+        "500":
+          description: Internal error
+          schema:
+            $ref: '#/definitions/helpers.ErrResponse'
+      summary: Add a new song
+      tags:
+      - Song Library
+  /change_song/{id}:
+    patch:
+      description: Changing song data by its ID
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: The new group name
+        in: query
+        name: changes[new_group_name]
+        type: string
+      - description: The new song name
+        in: query
+        name: changes[new_song_name]
+        type: string
+      - description: The new song link
+        in: query
+        name: changes[new_link]
+        type: string
+      - description: The new release date
+        in: query
+        name: changes[new_release_date]
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/helpers.ErrResponse'
+        "404":
+          description: Not found
+          schema:
+            $ref: '#/definitions/helpers.ErrResponse'
+        "500":
+          description: Internal error
+          schema:
+            $ref: '#/definitions/helpers.ErrResponse'
+      summary: Change song data
+      tags:
+      - Song Library
+  /delete_song/{id}:
+    delete:
+      description: Deletes a song by its ID
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/helpers.ErrResponse'
+        "404":
+          description: Not found
+          schema:
+            $ref: '#/definitions/helpers.ErrResponse'
+        "500":
+          description: Internal error
+          schema:
+            $ref: '#/definitions/helpers.ErrResponse'
+      summary: Delete a song
+      tags:
+      - Songs
+  /get_info:
+    get:
+      description: Get songs info from library
+      parameters:
+      - description: group filter
+        in: query
+        name: filters[group]
+        type: string
+      - description: song filter
+        in: query
+        name: filters[song]
+        type: string
+      - description: release start date filter (support gt,gte)
+        in: query
+        name: filters[release_date_start]
+        type: string
+      - description: release end date filter (support lt,lte)
+        in: query
+        name: filters[release_date_end]
+        type: string
+      - description: release date filter
+        in: query
+        name: filters[release_date]
+        type: string
+      - description: page num
+        in: query
+        name: page
+        required: true
+        type: string
+      - description: limit num
+        in: query
+        name: limit
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Response with filtered songs
+          schema:
+            $ref: '#/definitions/helpers.GetFilteredSongs'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/helpers.ErrResponse'
+        "404":
+          description: Not found
+          schema:
+            $ref: '#/definitions/helpers.ErrResponse'
+        "500":
+          description: Internal error
+          schema:
+            $ref: '#/definitions/helpers.ErrResponse'
+      summary: Get songs info
+      tags:
+      - Song Library
+  /lyrics/{id}:
+    get:
+      description: Get lyrics with pagination
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: page num
+        in: query
+        name: page
+        required: true
+        type: string
+      - description: limit num
+        in: query
+        name: limit
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Response with filtered songs
+          schema:
+            $ref: '#/definitions/helpers.GetLyricsResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/helpers.ErrResponse'
+        "404":
+          description: Not found
+          schema:
+            $ref: '#/definitions/helpers.ErrResponse'
+        "500":
+          description: Internal error
+          schema:
+            $ref: '#/definitions/helpers.ErrResponse'
+      summary: Get lyrics
+      tags:
+      - Song Library
+swagger: "2.0"
